@@ -57,11 +57,18 @@ const OptimizedImage = ({
 
 // Email Image component to prevent email scraping
 const EmailImage = ({ email, width = 200, height = 30, className = '', ...props }) => {
-  // In a real implementation, this would be a pre-generated webp image of the email
-  // For demo purposes, we'll use a placeholder
+  // Get a simple hash of the email to use in the filename
+  const getEmailHash = (email) => {
+    // Extract the username part (before @) to use in the filename
+    return email.split('@')[0];
+  };
+  
+  // Build the image path
+  const imagePath = `/images/emails/email-protected-${getEmailHash(email)}.webp`;
+  
   return (
     <img
-      src={`/api/placeholder/${width}/${height}`}
+      src={imagePath}
       alt="E-mail contact"
       width={width}
       height={height}

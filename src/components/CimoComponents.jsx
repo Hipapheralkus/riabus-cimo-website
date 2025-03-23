@@ -171,16 +171,8 @@ const CimoFooter = () => {
   
   return (
     <footer className="bg-emerald-700 text-white py-6">
-      <div className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4 md:mb-0">
-            <p>&copy; {currentYear} Čimo - výrobný sortiment. Všetky práva vyhradené.</p>
-          </div>
-          <div className="flex space-x-4">
-            <a href="#" className="hover:text-emerald-200 transition-colors">Obchodné podmienky</a>
-            <a href="#" className="hover:text-emerald-200 transition-colors">Ochrana osobných údajov</a>
-          </div>
-        </div>
+      <div className="container mx-auto px-4 text-center">
+        <p>&copy; {currentYear} Čimo - výrobný sortiment. Všetky práva vyhradené.</p>
       </div>
     </footer>
   );

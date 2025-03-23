@@ -1,9 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './App.css';
+import './tailwind.css'; // Import the generated Tailwind CSS
+import './App.css';      // Import custom CSS
 
-// For accessibility and better user experience, let's add focus outlines for keyboard users only
+// For accessibility and better user experience
 const handleFirstTab = (e) => {
   if (e.key === 'Tab') {
     document.body.classList.add('user-is-tabbing');

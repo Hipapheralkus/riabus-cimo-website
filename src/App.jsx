@@ -1,3 +1,4 @@
+// First, make sure your import statements at the top of App.jsx include CimoHome:
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
 import './App.css';
@@ -8,8 +9,7 @@ import { RiabusLayout, RiabusNavbar, RiabusFooter, BusCard, ContactCard } from '
 import { CimoLayout, CimoNavbar, CimoFooter } from './components/CimoComponents';
 
 // Import the Cimo product components
-import { CimoProductCategory, CimoContact, categoryNames } from './components/CimoProductComponents';
-
+import { CimoProductCategory, CimoContact, categoryNames, CimoHome } from './components/CimoProductComponents';
 // Common Components
 const Layout = ({ children, className }) => {
   return (
@@ -93,7 +93,7 @@ const RiabusHome = () => {
               Ak potrebujete autobusovú prepravu, alebo zorganizovanie exkurzií za priaznivú cenu, sme tu pre vás.
             </p>
             <p className="text-lg mb-4">
-              Prepravný poriadok si môžete stiahnuť na tomto <a href="#" className="text-blue-600 hover:underline font-medium">odkaze</a>.
+              Prepravný poriadok si môžete stiahnuť na tomto <a href="/files/prepravnyPoriadok.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">odkaze</a>.
             </p>
             <p className="text-lg font-medium text-blue-700">
               V spoločnosti RIABUS je vaša spokojnosť na prvom mieste.
@@ -269,144 +269,16 @@ const RiabusContact = () => {
   return (
     <RiabusLayout>
       <div className="max-w-4xl mx-auto">
-        <section className="mb-12">
+        <section>
           <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-6">Kontaktujte nás</h1>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-2xl font-bold text-blue-700 mb-4">Kontaktné osoby</h2>
-                
-                <div className="space-y-6">
-                  {contactPeople.map((person, index) => (
-                    <ContactCard key={index} person={person} />
-                  ))}
-                </div>
-              </div>
-              
-              <div className="bg-white rounded-lg shadow-md p-6">
-                <h2 className="text-lg font-bold text-blue-700 mb-3">Prevádzková doba</h2>
-                
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="font-medium">Pondelok - Piatok:</span>
-                    <span>8:00 - 17:00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Sobota:</span>
-                    <span>9:00 - 12:00</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span className="font-medium">Nedeľa:</span>
-                    <span>Zatvorené</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h2 className="text-2xl font-bold text-blue-700 mb-4">Napíšte nám</h2>
-              
-              <form className="space-y-4 riabus-form">
-                <div>
-                  <label htmlFor="name" className="block text-gray-700 mb-1">Meno a priezvisko *</label>
-                  <input 
-                    type="text" 
-                    id="name" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Vaše meno"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="email" className="block text-gray-700 mb-1">E-mail *</label>
-                  <input 
-                    type="email" 
-                    id="email" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Váš e-mail"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="phone" className="block text-gray-700 mb-1">Telefón</label>
-                  <input 
-                    type="tel" 
-                    id="phone" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Vaše telefónne číslo"
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="subject" className="block text-gray-700 mb-1">Predmet *</label>
-                  <input 
-                    type="text" 
-                    id="subject" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Predmet správy"
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="message" className="block text-gray-700 mb-1">Správa *</label>
-                  <textarea 
-                    id="message" 
-                    rows="5" 
-                    className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    placeholder="Vaša správa"
-                    required
-                  ></textarea>
-                </div>
-                
-                <div className="flex items-start">
-                  <input 
-                    type="checkbox" 
-                    id="gdpr" 
-                    className="mt-1 mr-2"
-                    required
-                  />
-                  <label htmlFor="gdpr" className="text-sm text-gray-700">
-                    Súhlasím so spracovaním osobných údajov podľa zákona o GDPR.
-                  </label>
-                </div>
-                
-                <button 
-                  type="submit" 
-                  className="w-full bg-blue-600 text-white px-6 py-3 rounded font-medium hover:bg-blue-700 transition-colors"
-                >
-                  Odoslať správu
-                </button>
-                
-                <p className="text-sm text-gray-600 italic">* Povinné údaje</p>
-              </form>
-            </div>
-          </div>
-        </section>
-        
-        <section>
           <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-2xl font-bold text-blue-700 mb-4">Kde nás nájdete</h2>
+            <h2 className="text-2xl font-bold text-blue-700 mb-4">Kontaktné osoby</h2>
             
-            <div className="aspect-w-16 aspect-h-9 bg-gray-200 rounded overflow-hidden mb-4">
-              {/* In a real application, this would be a Google Maps embed */}
-              <div className="w-full h-full flex items-center justify-center">
-                <span className="text-gray-500">Mapa lokality (Google Maps)</span>
-              </div>
-            </div>
-            
-            <div className="text-center">
-              <a 
-                href="https://maps.google.com/?q=Pod+papierňou+36,+085+01+Bardejov" 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="inline-block bg-blue-100 text-blue-700 px-4 py-2 rounded font-medium hover:bg-blue-200 transition-colors"
-              >
-                Zobraziť na Google Maps
-              </a>
+            <div className="space-y-6">
+              {contactPeople.map((person, index) => (
+                <ContactCard key={index} person={person} />
+              ))}
             </div>
           </div>
         </section>
@@ -513,7 +385,7 @@ const NotFound = () => {
   );
 };
 
-// App Component
+// App Component with fixed routes
 function App() {
   return (
     <Router>
@@ -529,19 +401,8 @@ function App() {
         <Route path="/cimo" element={<CimoHome />} />
         <Route path="/cimo/kontakt" element={<CimoContact />} />
         
-        {/* Cimo Product Categories */}
-        <Route path="/cimo/karty" element={<CimoProductCategory />} />
-        <Route path="/cimo/obaly" element={<CimoProductCategory />} />
-        <Route path="/cimo/karticky" element={<CimoProductCategory />} />
-        <Route path="/cimo/karticky-velke" element={<CimoProductCategory />} />
-        <Route path="/cimo/karticky-male" element={<CimoProductCategory />} />
-        <Route path="/cimo/rozvrhy" element={<CimoProductCategory />} />
-        <Route path="/cimo/zalozky" element={<CimoProductCategory />} />
-        <Route path="/cimo/pozvanky" element={<CimoProductCategory />} />
-        <Route path="/cimo/pexesa" element={<CimoProductCategory />} />
-        <Route path="/cimo/stitky" element={<CimoProductCategory />} />
-        <Route path="/cimo/cenovky" element={<CimoProductCategory />} />
-        <Route path="/cimo/nalepky" element={<CimoProductCategory />} />
+        {/* Cimo Product Categories - use a single route with parameter */}
+        <Route path="/cimo/:category" element={<CimoProductCategory />} />
         
         {/* 404 Route */}
         <Route path="*" element={<NotFound />} />

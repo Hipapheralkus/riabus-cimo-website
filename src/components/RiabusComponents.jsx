@@ -104,8 +104,7 @@ const RiabusFooter = () => {
             <p>&copy; {currentYear} Autobusová preprava RIABUS. Všetky práva vyhradené.</p>
           </div>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-blue-200 transition-colors">Prepravný poriadok</a>
-            <a href="#" className="hover:text-blue-200 transition-colors">Ochrana osobných údajov</a>
+          <a href="/files/prepravnyPoriadok.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-blue-200 transition-colors">Prepravný poriadok</a>
           </div>
         </div>
       </div>
