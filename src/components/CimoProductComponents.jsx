@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { CimoLayout } from './CimoComponents';
+import { OptimizedImage } from '../utils/ImageComponents';
 
-// Product data parsed from the uploaded file
+// Complete product data
 const productData = {
   // Súbory kartičiek
   "karty": [
@@ -89,11 +90,6 @@ const productData = {
     { id: "D - Slovník", name: "Slovník pojmov", dimensions: "181 mm x 131 mm", category: "Dejepis", hasBackside: true },
   ],
   
-  // Obal na kartičky
-  "obaly": [
-    { id: "Obal", name: "Obal na kartičky", dimensions: "181 mm x 131 mm", hasBackside: false },
-  ],
-  
   // Kartičky (181 mm × 131 mm)
   "karticky-velke": [
     { id: "PrvkyTabulka", name: "Periodická sústava prvkov", dimensions: "181 mm x 131 mm", hasBackside: true },
@@ -119,96 +115,25 @@ const productData = {
     { id: "KarZemEN", name: "Anglicko - kartičkový zemepis", dimensions: "131 mm x 91 mm", hasBackside: true },
   ],
   
-  // Rozvrhy hodín
-  "rozvrhy": [
-    { id: "RozvrhVelkyVtaky", name: "Rozvrh hodín veľký - vtáky", dimensions: "181 mm x 131 mm", hasBackside: false },
-    { id: "RozvrhVelkyRyby", name: "Rozvrh hodín veľký - ryby", dimensions: "181 mm x 131 mm", hasBackside: false },
-    { id: "RozvrhVelkyPsy", name: "Rozvrh hodín veľký - psy", dimensions: "181 mm x 131 mm", hasBackside: false },
-    { id: "RozvrhMalyVtaky", name: "Rozvrh hodín malý - vtáky", dimensions: "130 mm x 90 mm", hasBackside: false },
-    { id: "RozvrhMalyRyby", name: "Rozvrh hodín malý - ryby", dimensions: "130 mm x 90 mm", hasBackside: false },
-    { id: "RozvrhMalyPsy", name: "Rozvrh hodín malý - psy", dimensions: "130 mm x 90 mm", hasBackside: false },
-    { id: "RozvrhMalyZlty", name: "Rozvrh hodín malý - žltý", dimensions: "130 mm x 90 mm", hasBackside: false },
-    { id: "RozvrhEN", name: "Timetable (anglický rozvrh hodín)", dimensions: "130 mm x 90 mm", hasBackside: false },
-  ],
+  // Add other categories if needed
+};
+
+// Very simple direct path building - no fancy formatting that could cause issues
+const getImagePath = (product, category, side) => {
+  // Convert ID: Remove spaces, convert to lowercase
+  let id = product.id.toLowerCase()
+    .replace(/\s+/g, '')      // Remove spaces
+    .replace(' - ', '-');     // Ensure consistent dash format
   
-  // Záložky
-  "zalozky": [
-    { id: "ZalDopZnacky1", name: "Záložka - Dopravné značky - 1", dimensions: "42 mm x 180 mm", hasBackside: false },
-    { id: "ZalDopZnacky2", name: "Záložka - Dopravné značky - 2", dimensions: "42 mm x 180 mm", hasBackside: false },
-    { id: "ZalDopZnacky3", name: "Záložka - Dopravné značky - 3", dimensions: "42 mm x 180 mm", hasBackside: false },
-    { id: "ZalDopZnacky4", name: "Záložka - Dopravné značky - 4", dimensions: "42 mm x 180 mm", hasBackside: false },
-    { id: "ZalDopZnacky5", name: "Záložka - Dopravné značky - 5", dimensions: "42 mm x 180 mm", hasBackside: false },
-    { id: "ZalVtakyVoda", name: "Záložka - Vtáky vodných plôch a riek", dimensions: "180 mm x 42 mm", hasBackside: false },
-    { id: "ZalVtakyPolia", name: "Záložka - Vtáky polí a záhrad", dimensions: "180 mm x 42 mm", hasBackside: false },
-    { id: "ZalVtakyLesy", name: "Záložka - Vtáky lesov a hôr", dimensions: "42 mm x 180 mm", hasBackside: false },
-    { id: "ZalDejepis", name: "Záložka - Dejepis I.", dimensions: "42 mm x 180 mm", hasBackside: false },
-  ],
+  // Determine folder based on category
+  let folder = 'unknown';
+  if (category === 'karty') folder = 'subory';
+  else if (category === 'karticky-velke') folder = 'karticky';
+  else if (category === 'karticky-male') folder = 'kartickyMale';
+  else folder = category;
   
-  // Pozvánky
-  "pozvanky": [
-    { id: "PozZvieratka", name: "Pozvánka - zvieratká", dimensions: "74 mm x 90 mm", hasBackside: false },
-    { id: "PozKarneval", name: "Pozvánka - karneval", dimensions: "74 mm x 90 mm", hasBackside: false },
-    { id: "PozDisko", name: "Pozvánka - disko", dimensions: "74 mm x 90 mm", hasBackside: false },
-  ],
-  
-  // Pexesá
-  "pexesa": [
-    { id: "PexVtaky", name: "Pexeso - Vtáky", dimensions: "690 mm x 233 mm", hasBackside: false },
-    { id: "PexDopZnacky", name: "Pexeso - Dopravné značky", dimensions: "690 mm x 233 mm", hasBackside: false },
-    { id: "PexVlajky", name: "Pexeso - Vlajky európskych štátov", dimensions: "690 mm x 233 mm", hasBackside: false },
-    { id: "PexPsy", name: "Pexeso - Psy", dimensions: "690 mm x 233 mm", hasBackside: false },
-    { id: "PexHrady", name: "Pexeso - Hrady a zámky na Slovensku", dimensions: "690 mm x 233 mm", hasBackside: false },
-  ],
-  
-  // Zošitové štítky
-  "stitky": [
-    { id: "StiVtakyEU", name: "Zošitové štítky - vtáky Európy (15 druhov)", dimensions: "4 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiModre", name: "Zošitové štítky - modré", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiMotyle", name: "Zošitové štítky - motýle", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiRyby", name: "Zošitové štítky - ryby", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiVtaky", name: "Zošitové štítky - vtáky", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiPsy", name: "Zošitové štítky - psy", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiSafari", name: "Zošitové štítky - safari", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false },
-    { id: "StiPsy1", name: "Zošitové štítky - psy (1)", dimensions: "4 ks 81 mm x 46 mm", hasBackside: false },
-    { id: "StiPsy2", name: "Zošitové štítky - psy (2)", dimensions: "4 ks 81 mm x 46 mm", hasBackside: false },
-    { id: "StiPsy3", name: "Zošitové štítky - psy (3)", dimensions: "10 ks 46 mm x 31 mm", hasBackside: false },
-    { id: "StiVianoce", name: "Vianočné štítky", dimensions: "8 ks 75 mm x 38 mm", hasBackside: false },
-  ],
-  
-  // Cenovky
-  "cenovky": [
-    // Neduálne cenovky (100 ks = 1 bal)
-    { id: "Cen10", name: "Cenovka obyčajná malá prázdna", dimensions: "45,5 mm x 28 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen12", name: "Cenovka obyčajná malá 2 - ciferná", dimensions: "29,5 mm x 28 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen13", name: "Cenovka obyčajná malá 3 - ciferná", dimensions: "37 mm x 28 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen14", name: "Cenovka obyčajná malá 4 - ciferná", dimensions: "45,5 mm x 28 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen20", name: "Cenovka obyčajná stredná prázdna", dimensions: "63 mm x 39 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen22", name: "Cenovka obyčajná stredná 2 - ciferná", dimensions: "41 mm x 39 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen23", name: "Cenovka obyčajná stredná 3 - ciferná", dimensions: "51 mm x 39 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen24", name: "Cenovka obyčajná stredná 4 - ciferná", dimensions: "63 mm x 39 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen30", name: "Cenovka obyčajná veľká prázdna", dimensions: "78 mm x 48 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen32", name: "Cenovka obyčajná veľká 2 - ciferná", dimensions: "50,5 mm x 48 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen33", name: "Cenovka obyčajná veľká 3 - ciferná", dimensions: "63,5 mm x 48 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen34", name: "Cenovka obyčajná veľká 4 - ciferná", dimensions: "78 mm x 48 mm", packaging: "100 ks", hasBackside: false },
-    { id: "Cen40", name: "Cenovka dvojitá malá prázdna", dimensions: "45,5 mm x 28 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen42", name: "Cenovka dvojitá malá 2 - ciferná", dimensions: "29,5 mm x 28 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen43", name: "Cenovka dvojitá malá 3 - ciferná", dimensions: "37 mm x 28 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen44", name: "Cenovka dvojitá malá 4 - ciferná", dimensions: "45,5 mm x 28 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen50", name: "Cenovka dvojitá stredná prázdna", dimensions: "63 mm x 39 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen52", name: "Cenovka dvojitá stredná 2 - ciferná", dimensions: "41 mm x 39 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen53", name: "Cenovka dvojitá stredná 3 - ciferná", dimensions: "51 mm x 39 mm - 2", packaging: "100 ks", hasBackside: false },
-    { id: "Cen54", name: "Cenovka dvojitá stredná 4 - ciferná", dimensions: "63 mm x 39 mm - 2", packaging: "100 ks", hasBackside: false },
-    
-    // Neduálne cenovky (300 ks = 1 bal)
-    { id: "Cen20_300", name: "Cenovka obyčajná stredná prázdna", dimensions: "63 mm x 39 mm", packaging: "300 ks", hasBackside: false },
-    { id: "Cen23_300", name: "Cenovka obyčajná stredná 2 - ciferná", dimensions: "51 mm x 39 mm", packaging: "300 ks", hasBackside: false },
-    { id: "Cen53_300", name: "Cenovka obyčajná stredná 3 - ciferná", dimensions: "51 mm x 39 mm - 2", packaging: "300 ks", hasBackside: false },
-  ],
-  
-  // Nálepka – SK
-  "nalepky": [
-    { id: "NalSK", name: "Nálepka - SK", dimensions: "140 mm x 94 mm", hasBackside: false },
-  ],
+  // Build the path
+  return `/images/products/${folder}/cimo-${folder}-${id}-${side}.webp`;
 };
 
 // Categories mapping for display names
@@ -233,25 +158,51 @@ const CimoProductCategory = () => {
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
   
-  console.log("Category param:", category); // Add this for debugging
-  console.log("Available categories:", Object.keys(productData)); // Add this for debugging
-  
   useEffect(() => {
+    // Debug the category parameter
+    console.log("🔍 Current category from URL:", category);
+    console.log("🔍 Available categories:", Object.keys(productData));
+    
     if (category && productData[category]) {
-      console.log("Found category data:", productData[category].length); // Debug
+      console.log(`✅ Found ${productData[category].length} products in category "${category}"`);
       setProducts(productData[category]);
       
       // Get unique subcategories
       const subCats = [...new Set(productData[category].map(p => p.category))].filter(Boolean);
+      console.log("🔍 Subcategories:", subCats);
       setSubcategories(subCats);
     } else {
-      console.log("Category not found:", category); // Debug
+      console.error(`❌ Category "${category}" not found in product data!`);
     }
   }, [category]);
   
   const filteredProducts = selectedSubcategory === 'all' 
     ? products 
     : products.filter(p => p.category === selectedSubcategory);
+
+  // Debug the first product's image path if any products exist
+  useEffect(() => {
+    if (filteredProducts.length > 0 && category) {
+      const firstProduct = filteredProducts[0];
+      const frontPath = getImagePath(firstProduct, category, 'front');
+      const backPath = firstProduct.hasBackside ? getImagePath(firstProduct, category, 'back') : null;
+      
+      console.log("🔍 First product:", firstProduct);
+      console.log("🔍 Front image path:", frontPath);
+      if (backPath) console.log("🔍 Back image path:", backPath);
+      
+      // Check if image exists
+      const checkImage = (url) => {
+        const img = new Image();
+        img.onload = () => console.log(`✅ Image exists: ${url}`);
+        img.onerror = () => console.error(`❌ Image not found: ${url}`);
+        img.src = url;
+      };
+      
+      checkImage(frontPath);
+      if (backPath) checkImage(backPath);
+    }
+  }, [filteredProducts, category]);
   
   if (!category || !productData[category]) {
     return (
@@ -357,19 +308,25 @@ const CimoProductCategory = () => {
                     )}
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex items-center space-x-2">
-                        <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center">
-                          <img
-                            src="/api/placeholder/64/64"
+                        <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                          <OptimizedImage 
+                            src={getImagePath(product, category, 'front')}
                             alt={`${product.name} predná strana`}
-                            className="max-h-full"
+                            className="object-contain max-h-full"
+                            placeholderSrc="/images/missing-image.webp"
+                            width={64}
+                            height={64}
                           />
                         </div>
                         {product.hasBackside && (
-                          <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center">
-                            <img
-                              src="/api/placeholder/64/64"
+                          <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
+                            <OptimizedImage 
+                              src={getImagePath(product, category, 'back')}
                               alt={`${product.name} zadná strana`}
-                              className="max-h-full"
+                              className="object-contain max-h-full"
+                              placeholderSrc="/images/missing-image.webp"
+                              width={64}
+                              height={64}
                             />
                           </div>
                         )}
@@ -479,4 +436,115 @@ const CimoContact = () => {
   );
 };
 
-export { CimoProductCategory, CimoHome, CimoContact, categoryNames };
+// A direct test component to help debug image loading
+const TestImageComponent = () => {
+  // Test with specific direct paths
+  const testPaths = [
+    '/images/products/subory/cimo-subory-sj1-front.webp',
+    '/images/products/karticky/cimo-karticky-prvkytabulka-front.webp',
+    '/images/products/kartickyMale/cimo-kartickyMale-dvojtvaryi-front.webp'
+  ];
+  
+  // Test with standard image tag
+  const testWithRegularImg = (path) => {
+    return (
+      <div key={path} className="mb-8 border p-4 rounded bg-gray-50">
+        <p className="mb-2 font-bold">Testing: {path}</p>
+        <div className="h-40 flex items-center justify-center bg-white border rounded">
+          <img 
+            src={path} 
+            alt="Test image" 
+            className="max-h-full"
+            onLoad={() => console.log(`✅ Image loaded successfully: ${path}`)}
+            onError={(e) => {
+              console.error(`❌ Image failed to load: ${path}`);
+              e.target.src = '/api/placeholder/120/120';
+            }}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <CimoLayout>
+      <div className="max-w-4xl mx-auto">
+        <h1 className="text-3xl font-bold text-emerald-800 mb-6">Image Loading Test</h1>
+        
+        {/* Testing direct image references */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-bold mb-4">Testing Direct Image References</h2>
+          
+          {testPaths.map(path => testWithRegularImg(path))}
+          
+          <div className="mt-6 border-t pt-4">
+            <h3 className="font-bold mb-2">File Structure Check:</h3>
+            <p className="mb-4">
+              Make sure your image files are placed exactly at:<br/>
+              <code className="bg-gray-100 p-1 rounded">/public/images/products/subory/cimo-subory-sj1-front.webp</code>
+            </p>
+            
+            <p className="text-sm text-gray-600">
+              Note: In development, the "public" folder is served from the root, so paths start with "/images/..."
+            </p>
+          </div>
+        </div>
+        
+        {/* Debug tools */}
+        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-xl font-bold mb-4">Debugging Tools</h2>
+          
+          <div className="space-y-4">
+            <button 
+              onClick={() => {
+                const file = new Image();
+                file.onload = () => alert('✅ Test image exists!');
+                file.onerror = () => alert('❌ Test image NOT found!');
+                file.src = '/images/products/subory/cimo-subory-sj1-front.webp';
+              }}
+              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            >
+              Check First Image Exists
+            </button>
+            
+            <button 
+              onClick={() => {
+                console.log('🔍 Available categories:', Object.keys(productData));
+                console.log('🔍 Sample product:', productData.karty[0]);
+                const path = getImagePath(productData.karty[0], 'karty', 'front');
+                console.log('🔍 Sample image path:', path);
+                alert(`Check console for debugging info for path: ${path}`);
+              }}
+              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+            >
+              Log Path Debugging Info
+            </button>
+            
+            <button 
+              onClick={() => {
+                // List all files in public folder (doesn't work in browser, just for reference)
+                alert('This would list files in the public folder, but browser security prevents this. Check server logs or use developer tools Network tab.');
+              }}
+              className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
+            >
+              Try List Files (Demo Only)
+            </button>
+          </div>
+        </div>
+        
+        <div className="bg-gray-100 p-4 rounded">
+          <h3 className="font-bold">Debugging Tips:</h3>
+          <ul className="list-disc pl-6 mt-2 space-y-1">
+            <li>Check browser console (F12) for errors</li>
+            <li>Verify file paths and case sensitivity</li>
+            <li>Check the Network tab to see if images are being requested</li>
+            <li>Ensure Vite is properly configured to serve static assets</li>
+            <li>Try using standard <code className="bg-gray-200 p-1 rounded">&lt;img&gt;</code> tags as a test</li>
+          </ul>
+        </div>
+      </div>
+    </CimoLayout>
+  );
+};
+
+export { CimoProductCategory, CimoHome, CimoContact, categoryNames, TestImageComponent };

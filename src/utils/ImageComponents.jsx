@@ -1,70 +1,62 @@
 import React, { useState } from 'react';
 
-// Component for optimized images with webp format
+// Component that handles missing images gracefully
 const OptimizedImage = ({
   src,
   alt,
-  width,
-  height,
+  width = 120,
+  height = 120,
   className = '',
-  fallbackType = 'jpg',
-  loading = 'lazy',
+  placeholderSrc = '/images/missing-image.webp', // Path to your missing image placeholder
   ...props
 }) => {
-  const [imageError, setImageError] = useState(false);
+  const [error, setError] = useState(false);
   
-  // Get the base part of the source without extension
-  const getBaseSrc = (src) => {
-    if (!src) return '';
-    return src.substring(0, src.lastIndexOf('.')) || src;
-  };
-  
-  // Handle image load error
-  const handleError = () => {
-    if (!imageError) {
-      setImageError(true);
+  // Only log the error once, not continuously
+  const handleError = (e) => {
+    if (!error) {
+      console.log(`Image not found: ${src} - using placeholder instead`);
+      setError(true);
+      
+      // Use the placeholder image
+      e.target.src = placeholderSrc;
+      
+      // Remove the onerror handler to prevent infinite loops if placeholder also fails
+      e.target.onerror = null;
     }
   };
   
-  // In a real environment, we'd have both webp and fallback images
-  // For this demo, we'll use placeholder images
-  const baseSrc = getBaseSrc(src);
-  const webpSrc = `${baseSrc}.webp`;
-  const fallbackSrc = `${baseSrc}.${fallbackType}`;
-  
-  // For demo purposes, we're using placeholders
-  const placeholderSrc = `/api/placeholder/${width || 400}/${height || 300}`;
-
   return (
-    <picture>
-      {!imageError && (
-        <source srcSet={webpSrc} type="image/webp" />
-      )}
-      <source srcSet={imageError ? placeholderSrc : fallbackSrc} type={`image/${fallbackType}`} />
-      <img
-        src={imageError ? placeholderSrc : fallbackSrc}
-        alt={alt}
-        width={width}
-        height={height}
-        className={`${className}`}
-        loading={loading}
-        onError={handleError}
-        {...props}
-      />
-    </picture>
+    <img
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      className={className}
+      onError={handleError}
+      {...props}
+    />
   );
 };
 
-// Email Image component to prevent email scraping
+// Email Image component with improved error handling
 const EmailImage = ({ email, width = 200, height = 30, className = '', ...props }) => {
-  // Get a simple hash of the email to use in the filename
-  const getEmailHash = (email) => {
-    // Extract the username part (before @) to use in the filename
-    return email.split('@')[0];
-  };
+  const [error, setError] = useState(false);
   
-  // Build the image path
-  const imagePath = `/images/emails/email-protected-${getEmailHash(email)}.webp`;
+  // Get the username part for the image name
+  const username = email.split('@')[0];
+  
+  // Path to the email image
+  const imagePath = `/images/emails/email-protected-${username}.webp`;
+  
+  const handleError = (e) => {
+    if (!error) {
+      console.log(`Email image not found: ${imagePath} - using placeholder`);
+      setError(true);
+      e.target.src = `/api/placeholder/${width}/${height}`;
+      e.target.onerror = null;
+    }
+  };
   
   return (
     <img
@@ -74,6 +66,7 @@ const EmailImage = ({ email, width = 200, height = 30, className = '', ...props 
       height={height}
       className={className}
       title="Contact email (image to prevent spam)"
+      onError={handleError}
       {...props}
     />
   );
