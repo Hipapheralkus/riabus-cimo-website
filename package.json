@@ -7,7 +7,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "tailwind": "tailwindcss -i ./src/index.css -o ./src/tailwind.css --watch",
-    "dev:tailwind": "concurrently \"npm run tailwind\" \"npm run dev\""
+    "dev:tailwind": "concurrently \"npm run tailwind\" \"npm run dev\"",
+    "prepare": "npm install terser --save-dev"
   },
   "dependencies": {
     "react": "latest",
@@ -22,6 +23,7 @@
     "concurrently": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
+    "terser": "latest",
     "vite": "latest"
   }
 }
