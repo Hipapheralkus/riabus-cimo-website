@@ -13,7 +13,8 @@
   "dependencies": {
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest"
+    "react-router-dom": "latest",
+    "@vercel/analytics": "latest"
   },
   "devDependencies": {
     "@types/react": "latest",

@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './tailwind.css'; // Import the generated Tailwind CSS
 import './App.css';      // Import custom CSS
+import { Analytics } from "@vercel/analytics/react"
 
 // For accessibility and better user experience
 const handleFirstTab = (e) => {
