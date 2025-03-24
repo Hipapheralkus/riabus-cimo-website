@@ -11,10 +11,10 @@
     "prepare": "npm install terser --save-dev"
   },
   "dependencies": {
+    "@vercel/analytics": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest",
-    "@vercel/analytics": "latest"
+    "react-router-dom": "latest"
   },
   "devDependencies": {
     "@types/react": "latest",
@@ -24,7 +24,7 @@
     "concurrently": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
-    "terser": "latest",
+    "terser": "^5.39.0",
     "vite": "latest"
   }
 }

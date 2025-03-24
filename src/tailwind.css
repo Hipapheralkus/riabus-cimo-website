@@ -665,6 +665,10 @@ Ensure the default browser behavior of the `hidden` attribute.
   height: 24rem;
 }
 
+.h-64 {
+  height: 16rem;
+}
+
 .max-h-full {
   max-height: 100%;
 }
@@ -1005,6 +1009,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 
 .to-slate-200 {
   --tw-gradient-to: #e2e8f0;
+}
+
+.object-contain {
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 
 .object-cover {

@@ -117,13 +117,13 @@ const RiabusFooter = () => {
 const BusCard = ({ name, description, features, imageSrc }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:transform hover:scale-105">
-      <div className="h-96 bg-gray-200 flex items-center justify-center overflow-hidden">
+      <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden"> {/* Reduced height from h-96 */}
         <OptimizedImage 
           src={imageSrc || "/images/bus-placeholder.webp"} 
           alt={name} 
-          className="object-cover w-full h-full"
-          width={800}
-          height={600}
+          className="object-contain w-full h-full" // Changed from object-cover to object-contain
+          width={400}
+          height={300}
         />
       </div>
       <div className="p-6">
