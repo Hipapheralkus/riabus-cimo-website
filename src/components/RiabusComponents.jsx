@@ -104,7 +104,8 @@ const RiabusFooter = () => {
             <p>&copy; {currentYear} Autobusová preprava RIABUS. Všetky práva vyhradené.</p>
           </div>
           <div className="flex space-x-4">
-          <a href="/files/prepravnyPoriadok.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-blue-200 transition-colors">Prepravný poriadok</a>
+            <a href="#" className="hover:text-blue-200 transition-colors">Prepravný poriadok</a>
+            <a href="#" className="hover:text-blue-200 transition-colors">Ochrana osobných údajov</a>
           </div>
         </div>
       </div>
@@ -116,13 +117,13 @@ const RiabusFooter = () => {
 const BusCard = ({ name, description, features, imageSrc }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:transform hover:scale-105">
-      <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden">
+      <div className="h-96 bg-gray-200 flex items-center justify-center overflow-hidden">
         <OptimizedImage 
           src={imageSrc || "/images/bus-placeholder.webp"} 
           alt={name} 
           className="object-cover w-full h-full"
-          width={480}
-          height={320}
+          width={800}
+          height={600}
         />
       </div>
       <div className="p-6">

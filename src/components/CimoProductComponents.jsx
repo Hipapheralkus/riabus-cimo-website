@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import { CimoLayout } from './CimoComponents';
 import { OptimizedImage } from '../utils/ImageComponents';
 
+
 // Complete product data
 const productData = {
   // Súbory kartičiek
@@ -118,22 +119,218 @@ const productData = {
   // Add other categories if needed
 };
 
-// Very simple direct path building - no fancy formatting that could cause issues
-const getImagePath = (product, category, side) => {
-  // Convert ID: Remove spaces, convert to lowercase
-  let id = product.id.toLowerCase()
-    .replace(/\s+/g, '')      // Remove spaces
-    .replace(' - ', '-');     // Ensure consistent dash format
+// Image Modal Component
+const ProductImageModal = ({ isOpen, imageUrl, alt, onClose }) => {
+  // Close modal when Escape key is pressed
+  useEffect(() => {
+    const handleEscKey = (event) => {
+      if (event.key === 'Escape') {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscKey);
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscKey);
+    };
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
+  // Stop propagation to prevent closing when clicking on the image
+  const handleContentClick = (e) => {
+    e.stopPropagation();
+  };
+
+  return (
+    <div className="image-modal-overlay" onClick={onClose}>
+      <div className="image-modal-content" onClick={handleContentClick}>
+        <button className="image-modal-close" onClick={onClose} aria-label="Close image">
+          ×
+        </button>
+        <img 
+          src={imageUrl} 
+          alt={alt} 
+          className="image-modal-image" 
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            e.target.src = `/api/placeholder/600/600`;
+          }}
+        />
+        <div className="mt-2 text-center text-gray-700">{alt}</div>
+      </div>
+    </div>
+  );
+};
+
+// Product Image Component
+const ProductImage = ({ src, alt, size = 'md', productId, type, category }) => {
+  const [modalOpen, setModalOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
   
-  // Determine folder based on category
-  let folder = 'unknown';
-  if (category === 'karty') folder = 'subory';
-  else if (category === 'karticky-velke') folder = 'karticky';
-  else if (category === 'karticky-male') folder = 'kartickyMale';
-  else folder = category;
+  // Determine image size based on prop
+  const sizeClasses = {
+    sm: "h-16 w-16",
+    md: "h-32 w-32",
+    lg: "h-48 w-48"
+  };
   
-  // Build the path
-  return `/images/products/${folder}/cimo-${folder}-${id}-${side}.webp`;
+  const containerClass = sizeClasses[size] || sizeClasses.md;
+  
+  // Generate actual image path based on product info
+  const getImagePath = () => {
+    // If a direct src is provided, use it
+    if (src && !src.includes('placeholder')) {
+      return src;
+    }
+    
+    // Otherwise, construct path from product info
+    let folder = '';
+    if (category === 'karty') folder = 'subory';
+    else if (category === 'karticky-velke') folder = 'karticky-velke';
+    else if (category === 'karticky-male') folder = 'karticky-male';
+    else folder = category || 'subory';
+    
+    // Format product ID for filename (handle special cases)
+    // Example: "Sj - 1" should become "sj-1" (not "sj---1")
+    const formattedId = productId.toLowerCase()
+      .replace(/\s*-\s*/g, '-') // Replace " - " with a single "-"
+      .replace(/\s+/g, '-')     // Replace other spaces with "-"
+      .replace(/\//g, '-');     // Replace "/" with "-"
+    
+    return `/images/products/${folder}/cimo-${folder}-${formattedId}-${type}.webp`;
+  };
+  
+  const imagePath = getImagePath();
+  const placeholderSrc = `/api/placeholder/${size === 'lg' ? '200/200' : '128/128'}`;
+  
+  return (
+    <>
+      <div 
+        className={`${containerClass} bg-gray-100 rounded flex items-center justify-center overflow-hidden`}
+        onClick={() => modalOpen === false && setModalOpen(true)}
+      >
+        {imageError ? (
+          <div className="flex items-center justify-center w-full h-full text-gray-400">
+            <span className="text-sm text-center">No image</span>
+          </div>
+        ) : (
+          <img
+            src={imagePath}
+            alt={alt}
+            className="max-h-full max-w-full product-image"
+            onError={() => {
+              console.log("Image failed to load:", imagePath);
+              setImageError(true);
+            }}
+          />
+        )}
+      </div>
+      
+      {modalOpen && (
+        <ProductImageModal
+          isOpen={modalOpen}
+          imageUrl={imageError ? placeholderSrc : imagePath}
+          alt={alt}
+          onClose={() => setModalOpen(false)}
+        />
+      )}
+    </>
+  );
+};
+
+// Product Card View Component
+const ProductCardView = ({ products, category }) => {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+      {products.map((product, index) => (
+        <div 
+          key={index} 
+          className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+        >
+          <div className="p-6">
+            <h3 className="text-lg font-bold text-emerald-700 mb-2">{product.id}</h3>
+            <h4 className="text-gray-800 font-medium mb-4">{product.name}</h4>
+            
+            <div className="flex flex-col space-y-2 mb-4">
+              <div className="flex justify-between">
+                <span className="text-gray-600 font-medium">Rozmery:</span>
+                <span className="text-gray-800">{product.dimensions}</span>
+              </div>
+              
+              {category === "cenovky" && (
+                <div className="flex justify-between">
+                  <span className="text-gray-600 font-medium">Balenie:</span>
+                  <span className="text-gray-800">{product.packaging}</span>
+                </div>
+              )}
+            </div>
+            
+            <div className="flex flex-wrap justify-center gap-4 mt-6">
+              <ProductImage
+                productId={product.id}
+                type="front"
+                category={category}
+                alt={`${product.name} predná strana`}
+                size="lg"
+              />
+              {product.hasBackside && (
+                <ProductImage
+                  productId={product.id}
+                  type="back"
+                  category={category}
+                  alt={`${product.name} zadná strana`}
+                  size="lg"
+                />
+              )}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// View Toggle Component
+const ViewToggle = ({ currentView, onViewChange }) => {
+  return (
+    <div className="flex items-center space-x-4 mb-6">
+      <span className="text-sm font-medium text-gray-700">Zobrazenie:</span>
+      <div className="relative inline-flex rounded-md shadow-sm">
+        <button
+          type="button"
+          className={`py-2 px-4 text-sm font-medium rounded-l-md focus:outline-none ${
+            currentView === 'table'
+              ? 'bg-emerald-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50'
+          }`}
+          onClick={() => onViewChange('table')}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M3 14h18M3 18h18M3 6h18" />
+          </svg>
+          <span className="sr-only">Tabuľka</span>
+        </button>
+        <button
+          type="button"
+          className={`py-2 px-4 text-sm font-medium rounded-r-md focus:outline-none ${
+            currentView === 'cards'
+              ? 'bg-emerald-600 text-white'
+              : 'bg-white text-gray-700 hover:bg-gray-50'
+          }`}
+          onClick={() => onViewChange('cards')}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+          </svg>
+          <span className="sr-only">Karty</span>
+        </button>
+      </div>
+    </div>
+  );
 };
 
 // Categories mapping for display names
@@ -157,52 +354,25 @@ const CimoProductCategory = () => {
   const [products, setProducts] = useState([]);
   const [subcategories, setSubcategories] = useState([]);
   const [selectedSubcategory, setSelectedSubcategory] = useState('all');
+  const [viewMode, setViewMode] = useState('table'); // 'table' or 'cards'
   
   useEffect(() => {
-    // Debug the category parameter
-    console.log("🔍 Current category from URL:", category);
-    console.log("🔍 Available categories:", Object.keys(productData));
-    
     if (category && productData[category]) {
-      console.log(`✅ Found ${productData[category].length} products in category "${category}"`);
       setProducts(productData[category]);
       
       // Get unique subcategories
       const subCats = [...new Set(productData[category].map(p => p.category))].filter(Boolean);
-      console.log("🔍 Subcategories:", subCats);
       setSubcategories(subCats);
-    } else {
-      console.error(`❌ Category "${category}" not found in product data!`);
     }
   }, [category]);
   
   const filteredProducts = selectedSubcategory === 'all' 
     ? products 
     : products.filter(p => p.category === selectedSubcategory);
-
-  // Debug the first product's image path if any products exist
-  useEffect(() => {
-    if (filteredProducts.length > 0 && category) {
-      const firstProduct = filteredProducts[0];
-      const frontPath = getImagePath(firstProduct, category, 'front');
-      const backPath = firstProduct.hasBackside ? getImagePath(firstProduct, category, 'back') : null;
-      
-      console.log("🔍 First product:", firstProduct);
-      console.log("🔍 Front image path:", frontPath);
-      if (backPath) console.log("🔍 Back image path:", backPath);
-      
-      // Check if image exists
-      const checkImage = (url) => {
-        const img = new Image();
-        img.onload = () => console.log(`✅ Image exists: ${url}`);
-        img.onerror = () => console.error(`❌ Image not found: ${url}`);
-        img.src = url;
-      };
-      
-      checkImage(frontPath);
-      if (backPath) checkImage(backPath);
-    }
-  }, [filteredProducts, category]);
+  
+  const handleViewChange = (mode) => {
+    setViewMode(mode);
+  };
   
   if (!category || !productData[category]) {
     return (
@@ -265,8 +435,10 @@ const CimoProductCategory = () => {
           </div>
         )}
         
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-          <div className="overflow-x-auto">
+        <ViewToggle currentView={viewMode} onViewChange={handleViewChange} />
+        
+        {viewMode === 'table' ? (
+          <div className="overflow-x-auto bg-white rounded-lg shadow-md mb-8">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -295,7 +467,7 @@ const CimoProductCategory = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       {product.id}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <td className="px-6 py-4 text-sm text-gray-500">
                       {product.name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
@@ -306,29 +478,23 @@ const CimoProductCategory = () => {
                         {product.packaging}
                       </td>
                     )}
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
-                          <OptimizedImage 
-                            src={getImagePath(product, category, 'front')}
-                            alt={`${product.name} predná strana`}
-                            className="object-contain max-h-full"
-                            placeholderSrc="/images/missing-image.webp"
-                            width={64}
-                            height={64}
-                          />
-                        </div>
+                    <td className="px-6 py-4">
+                      <div className="flex flex-wrap items-center gap-4">
+                        <ProductImage
+                          productId={product.id}
+                          type="front"
+                          category={category}
+                          alt={`${product.name} predná strana`}
+                          size="md"
+                        />
                         {product.hasBackside && (
-                          <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center overflow-hidden">
-                            <OptimizedImage 
-                              src={getImagePath(product, category, 'back')}
-                              alt={`${product.name} zadná strana`}
-                              className="object-contain max-h-full"
-                              placeholderSrc="/images/missing-image.webp"
-                              width={64}
-                              height={64}
-                            />
-                          </div>
+                          <ProductImage
+                            productId={product.id}
+                            type="back"
+                            category={category}
+                            alt={`${product.name} zadná strana`}
+                            size="md"
+                          />
                         )}
                       </div>
                     </td>
@@ -337,7 +503,12 @@ const CimoProductCategory = () => {
               </tbody>
             </table>
           </div>
-        </div>
+        ) : (
+          <ProductCardView 
+            products={filteredProducts} 
+            category={category} 
+          />
+        )}
         
         {filteredProducts.length === 0 && (
           <div className="text-center py-8">
@@ -400,151 +571,114 @@ const CimoContact = () => {
       <div className="max-w-4xl mx-auto">
         <h1 className="text-3xl md:text-4xl font-bold text-emerald-800 mb-6">Kontaktujte nás</h1>
         
-        <div className="bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-2xl font-bold text-emerald-700 mb-4">Kontaktné údaje</h2>
-          
-          <div className="space-y-4">
-            <p className="flex items-start text-lg">
-              <svg className="w-5 h-5 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-              </svg>
-              <span>
-                Čimo - výrobný sortiment<br />
-                Adresa spoločnosti<br />
-                PSČ Mesto
-              </span>
-            </p>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold text-emerald-700 mb-4">Kontaktné údaje</h2>
             
-            <p className="flex items-center text-lg">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-              +421 900 000 000
-            </p>
-            
-            <div className="flex items-center text-lg">
-              <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-              </svg>
-              <img src="/api/placeholder/200/30" alt="E-mail" className="h-6" />
+            <div className="space-y-4">
+              <p className="flex items-start text-lg">
+                <svg className="w-5 h-5 mr-2 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span>
+                  Čimo - výrobný sortiment<br />
+                  Adresa spoločnosti<br />
+                  PSČ Mesto
+                </span>
+              </p>
+              
+              <p className="flex items-center text-lg">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+                +421 900 000 000
+              </p>
+              
+              <div className="flex items-center text-lg">
+                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+                <img src="/api/placeholder/200/30" alt="E-mail" className="h-6" />
+              </div>
+              
+              <div className="mt-6">
+                <h3 className="text-lg font-semibold mb-2">Otváracie hodiny:</h3>
+                <ul className="space-y-1">
+                  <li><span className="font-medium">Pondelok - Piatok:</span> 8:00 - 16:00</li>
+                  <li><span className="font-medium">Sobota:</span> 9:00 - 12:00</li>
+                  <li><span className="font-medium">Nedeľa:</span> Zatvorené</li>
+                </ul>
+              </div>
             </div>
           </div>
+          
+          <div className="bg-white rounded-lg shadow-md p-6">
+            <h2 className="text-2xl font-bold text-emerald-700 mb-4">Napíšte nám</h2>
+            
+            <form className="space-y-4 cimo-form">
+              <div>
+                <label htmlFor="name" className="block text-gray-700 mb-1">Meno a priezvisko</label>
+                <input 
+                  type="text" 
+                  id="name" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="Vaše meno"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="email" className="block text-gray-700 mb-1">E-mail</label>
+                <input 
+                  type="email" 
+                  id="email" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="Váš e-mail"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="phone" className="block text-gray-700 mb-1">Telefón</label>
+                <input 
+                  type="tel" 
+                  id="phone" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="Vaše telefónne číslo"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="subject" className="block text-gray-700 mb-1">Predmet</label>
+                <input 
+                  type="text" 
+                  id="subject" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="Predmet správy"
+                />
+              </div>
+              
+              <div>
+                <label htmlFor="message" className="block text-gray-700 mb-1">Správa</label>
+                <textarea 
+                  id="message" 
+                  rows="4" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                  placeholder="Vaša správa"
+                ></textarea>
+              </div>
+              
+              <button 
+                type="submit" 
+                className="w-full bg-emerald-600 text-white px-6 py-3 rounded font-medium hover:bg-emerald-700 transition-colors"
+              >
+                Odoslať správu
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </CimoLayout>
   );
 };
 
-// A direct test component to help debug image loading
-const TestImageComponent = () => {
-  // Test with specific direct paths
-  const testPaths = [
-    '/images/products/subory/cimo-subory-sj1-front.webp',
-    '/images/products/karticky/cimo-karticky-prvkytabulka-front.webp',
-    '/images/products/kartickyMale/cimo-kartickyMale-dvojtvaryi-front.webp'
-  ];
-  
-  // Test with standard image tag
-  const testWithRegularImg = (path) => {
-    return (
-      <div key={path} className="mb-8 border p-4 rounded bg-gray-50">
-        <p className="mb-2 font-bold">Testing: {path}</p>
-        <div className="h-40 flex items-center justify-center bg-white border rounded">
-          <img 
-            src={path} 
-            alt="Test image" 
-            className="max-h-full"
-            onLoad={() => console.log(`✅ Image loaded successfully: ${path}`)}
-            onError={(e) => {
-              console.error(`❌ Image failed to load: ${path}`);
-              e.target.src = '/api/placeholder/120/120';
-            }}
-          />
-        </div>
-      </div>
-    );
-  };
-
-  return (
-    <CimoLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-3xl font-bold text-emerald-800 mb-6">Image Loading Test</h1>
-        
-        {/* Testing direct image references */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold mb-4">Testing Direct Image References</h2>
-          
-          {testPaths.map(path => testWithRegularImg(path))}
-          
-          <div className="mt-6 border-t pt-4">
-            <h3 className="font-bold mb-2">File Structure Check:</h3>
-            <p className="mb-4">
-              Make sure your image files are placed exactly at:<br/>
-              <code className="bg-gray-100 p-1 rounded">/public/images/products/subory/cimo-subory-sj1-front.webp</code>
-            </p>
-            
-            <p className="text-sm text-gray-600">
-              Note: In development, the "public" folder is served from the root, so paths start with "/images/..."
-            </p>
-          </div>
-        </div>
-        
-        {/* Debug tools */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-          <h2 className="text-xl font-bold mb-4">Debugging Tools</h2>
-          
-          <div className="space-y-4">
-            <button 
-              onClick={() => {
-                const file = new Image();
-                file.onload = () => alert('✅ Test image exists!');
-                file.onerror = () => alert('❌ Test image NOT found!');
-                file.src = '/images/products/subory/cimo-subory-sj1-front.webp';
-              }}
-              className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-            >
-              Check First Image Exists
-            </button>
-            
-            <button 
-              onClick={() => {
-                console.log('🔍 Available categories:', Object.keys(productData));
-                console.log('🔍 Sample product:', productData.karty[0]);
-                const path = getImagePath(productData.karty[0], 'karty', 'front');
-                console.log('🔍 Sample image path:', path);
-                alert(`Check console for debugging info for path: ${path}`);
-              }}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-            >
-              Log Path Debugging Info
-            </button>
-            
-            <button 
-              onClick={() => {
-                // List all files in public folder (doesn't work in browser, just for reference)
-                alert('This would list files in the public folder, but browser security prevents this. Check server logs or use developer tools Network tab.');
-              }}
-              className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600"
-            >
-              Try List Files (Demo Only)
-            </button>
-          </div>
-        </div>
-        
-        <div className="bg-gray-100 p-4 rounded">
-          <h3 className="font-bold">Debugging Tips:</h3>
-          <ul className="list-disc pl-6 mt-2 space-y-1">
-            <li>Check browser console (F12) for errors</li>
-            <li>Verify file paths and case sensitivity</li>
-            <li>Check the Network tab to see if images are being requested</li>
-            <li>Ensure Vite is properly configured to serve static assets</li>
-            <li>Try using standard <code className="bg-gray-200 p-1 rounded">&lt;img&gt;</code> tags as a test</li>
-          </ul>
-        </div>
-      </div>
-    </CimoLayout>
-  );
-};
-
-export { CimoProductCategory, CimoHome, CimoContact, categoryNames, TestImageComponent };
+export { CimoProductCategory, CimoHome, CimoContact, categoryNames };
