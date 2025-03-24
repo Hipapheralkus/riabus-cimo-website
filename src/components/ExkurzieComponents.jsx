@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { OptimizedImage, EmailImage } from '../utils/ImageComponents';
 
-// Layout wrapper for Riabus pages
-const RiabusLayout = ({ children }) => {
+// Layout wrapper for Exkurzie pages
+const ExkurzieLayout = ({ children }) => {
   // Scroll to top on page navigation
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -11,17 +11,17 @@ const RiabusLayout = ({ children }) => {
 
   return (
     <div className="min-h-screen flex flex-col bg-blue-50">
-      <RiabusNavbar />
+      <ExkurzieNavbar />
       <main className="flex-grow container mx-auto px-4 py-8">
         {children}
       </main>
-      <RiabusFooter />
+      <ExkurzieFooter />
     </div>
   );
 };
 
-// Navbar component for Riabus
-const RiabusNavbar = () => {
+// Navbar component for Exkurzie
+const ExkurzieNavbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Close mobile menu when clicking outside
@@ -42,13 +42,13 @@ const RiabusNavbar = () => {
     <nav className="bg-blue-600 text-white shadow-md sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center py-4">
-          <Link to="/riabus" className="font-bold text-xl md:text-2xl flex items-center">
+          <Link to="/exkurzie" className="font-bold text-xl md:text-2xl flex items-center">
             <span className="mr-2">
               <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-2m-4-1v8m0 0l3-3m-3 3L9 8m-5 5h2.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293h3.172a1 1 0 00.707-.293l2.414-2.414a1 1 0 01.707-.293H20" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
               </svg>
             </span>
-            Autobusová preprava RIABUS
+            Exkurzie s profesionálnym sprievodcom
           </Link>
           
           {/* Mobile menu button */}
@@ -71,9 +71,9 @@ const RiabusNavbar = () => {
           
           {/* Desktop navigation */}
           <div className="hidden md:flex space-x-8">
-            <Link to="/riabus" className="hover:text-blue-200 transition-colors navbar-link">Domov</Link>
-            <Link to="/riabus/sluzby" className="hover:text-blue-200 transition-colors navbar-link">Služby</Link>
-            <Link to="/riabus/kontakt" className="hover:text-blue-200 transition-colors navbar-link">Kontakt</Link>
+            <Link to="/exkurzie" className="hover:text-blue-200 transition-colors navbar-link">Domov</Link>
+            <Link to="/exkurzie/sluzby" className="hover:text-blue-200 transition-colors navbar-link">Služby</Link>
+            <Link to="/exkurzie/kontakt" className="hover:text-blue-200 transition-colors navbar-link">Kontakt</Link>
             <Link to="/" className="hover:text-blue-200 transition-colors navbar-link">Späť na výber</Link>
           </div>
         </div>
@@ -81,9 +81,9 @@ const RiabusNavbar = () => {
         {/* Mobile navigation */}
         {isOpen && (
           <div className="md:hidden pb-4 border-t border-blue-500 mt-2 pt-2">
-            <Link to="/riabus" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Domov</Link>
-            <Link to="/riabus/sluzby" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Služby</Link>
-            <Link to="/riabus/kontakt" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Kontakt</Link>
+            <Link to="/exkurzie" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Domov</Link>
+            <Link to="/exkurzie/sluzby" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Služby</Link>
+            <Link to="/exkurzie/kontakt" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Kontakt</Link>
             <Link to="/" className="block py-2 hover:text-blue-200 transition-colors" onClick={() => setIsOpen(false)}>Späť na výber</Link>
           </div>
         )}
@@ -92,8 +92,8 @@ const RiabusNavbar = () => {
   );
 };
 
-// Footer component for Riabus
-const RiabusFooter = () => {
+// Footer component for Exkurzie
+const ExkurzieFooter = () => {
   const currentYear = new Date().getFullYear();
   
   return (
@@ -101,10 +101,10 @@ const RiabusFooter = () => {
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 md:mb-0">
-            <p>&copy; {currentYear} Autobusová preprava RIABUS. Všetky práva vyhradené.</p>
+            <p>&copy; {currentYear} Exkurzie s profesionálnym sprievodcom. Všetky práva vyhradené.</p>
           </div>
           <div className="flex space-x-4">
-            <a href="#" className="hover:text-blue-200 transition-colors">Prepravný poriadok</a>
+            <a href="/files/prepravnyPoriadok.pdf" target="_blank" rel="noopener noreferrer" className="hover:text-blue-200 transition-colors">Prepravný poriadok</a>
             <a href="#" className="hover:text-blue-200 transition-colors">Ochrana osobných údajov</a>
           </div>
         </div>
@@ -113,15 +113,15 @@ const RiabusFooter = () => {
   );
 };
 
-// Bus Card Component
-const BusCard = ({ name, description, features, imageSrc }) => {
+// Trip Card Component
+const TripCard = ({ name, description, features, imageSrc }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden transition-transform hover:transform hover:scale-105">
-      <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden"> {/* Reduced height from h-96 */}
+      <div className="h-64 bg-gray-200 flex items-center justify-center overflow-hidden">
         <OptimizedImage 
-          src={imageSrc || "/images/bus-placeholder.webp"} 
+          src={imageSrc || "/images/trip-placeholder.webp"} 
           alt={name} 
-          className="object-contain w-full h-full" // Changed from object-cover to object-contain
+          className="object-cover w-full h-full"
           width={400}
           height={300}
         />
@@ -184,9 +184,9 @@ const ContactCard = ({ person }) => {
 };
 
 export { 
-  RiabusLayout, 
-  RiabusNavbar, 
-  RiabusFooter,
-  BusCard,
+  ExkurzieLayout, 
+  ExkurzieNavbar, 
+  ExkurzieFooter,
+  TripCard,
   ContactCard
 };

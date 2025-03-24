@@ -1,6 +1,6 @@
-# RIABUS & ČIMO Website
+# Exkurzie & ČIMO Website
 
-This repository contains the source code for the RIABUS & ČIMO website, featuring a bus transportation service and educational materials catalog.
+This repository contains the source code for the Exkurzie & ČIMO website, featuring a bus transportation service and educational materials catalog.
 
 ## Table of Contents
 

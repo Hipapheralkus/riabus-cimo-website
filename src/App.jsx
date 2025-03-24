@@ -5,7 +5,7 @@ import './App.css';
 
 // Import shared components
 import { OptimizedImage, EmailImage } from './utils/ImageComponents';
-import { RiabusLayout, RiabusNavbar, RiabusFooter, BusCard, ContactCard } from './components/RiabusComponents';
+import { ExkurzieLayout, ExkurzieNavbar, ExkurzieFooter, TripCard, ContactCard } from './components/ExkurzieComponents';
 import { CimoLayout, CimoNavbar, CimoFooter } from './components/CimoComponents';
 
 // Import the Cimo product components
@@ -27,11 +27,11 @@ const LandingPage = () => {
         <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-8">Vyberte si oblasť záujmu</h1>
         <div className="flex flex-col md:flex-row gap-8 justify-center items-center">
           <BusinessCard 
-            title="Mimoškolská činnosť - exkurzie" 
+            title="Organizovanie exkurzií" 
             bgColor="bg-blue-600" 
             textColor="text-white"
-            path="/riabus"
-            description="Autobusová preprava RIABUS"
+            path="/exkurzie"
+            description="Exkurzie s profesionálnym sprievodcom"
           />
           <BusinessCard 
             title="Čimo - výrobný sortiment" 
@@ -62,55 +62,55 @@ const BusinessCard = ({ title, bgColor, textColor, path, description }) => {
   );
 };
 
-const RiabusHome = () => {
-  // Define the bus information
-  const buses = [
+const ExkurzieHome = () => {
+  // Define the popular destinations
+  const destinations = [
     {
-      id: 'iliade',
-      name: 'Renault ILIADE',
-      description: '49-miestny klimatizovaný autobus',
-      imageSrc: '/images/renault-iliade.webp',
+      id: 'krakow',
+      name: 'Krakov',
+      description: 'Historické centrum, Wawel, Kazimierz',
+      imageSrc: '/images/krakow.webp',
     },
     {
-      id: 'master',
-      name: 'Renault MASTER',
-      description: '15-miestny klimatizovaný minibus',
-      imageSrc: '/images/renault-master.webp',
+      id: 'budapest',
+      name: 'Budapešť',
+      description: 'Budínsky hrad, Parlament, Dunaj',
+      imageSrc: '/images/budapest.webp',
     }
   ];
 
   return (
-    <RiabusLayout>
+    <ExkurzieLayout>
       <div className="max-w-4xl mx-auto">
         <section className="mb-12">
-          <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-6">Autobusová preprava RIABUS</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-6">Exkurzie s profesionálnym sprievodcom</h1>
           
           <div className="bg-white rounded-lg shadow-md p-8 mb-8">
             <p className="text-lg mb-4">
-              Spoločnosť RIABUS pôsobí úspešne na Východnom Slovensku už niekoľko rokov. Špecializujeme sa na vnútroštátnu aj medzinárodnú autobusovú prepravu klimatizovaným 49-miestnym autobusom a 15-miestnym minibusom na organizovanie domácich a zahraničných exkurzií pre školy, kluby a iné.
+              Naša spoločnosť pôsobí úspešne na Východnom Slovensku už niekoľko rokov. Špecializujeme sa na organizovanie domácich a zahraničných exkurzií pre školy, kluby a iné skupiny. Každá exkurzia zahŕňa služby profesionálneho sprievodcu.
             </p>
             <p className="text-lg mb-4">
-              Ak potrebujete autobusovú prepravu, alebo zorganizovanie exkurzií za priaznivú cenu, sme tu pre vás.
+              Ak hľadáte zážitky v mestách ako Krakov, Budapešť, Wieliczka, Brno či Viedeň za priaznivú cenu, sme tu pre vás.
             </p>
             <p className="text-lg mb-4">
               Prepravný poriadok si môžete stiahnuť na tomto <a href="/files/prepravnyPoriadok.pdf" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline font-medium">odkaze</a>.
             </p>
             <p className="text-lg font-medium text-blue-700">
-              V spoločnosti RIABUS je vaša spokojnosť na prvom mieste.
+              Vaša spokojnosť s exkurziou je našou prioritou.
             </p>
           </div>
         </section>
         
         <section className="mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-blue-800 mb-6">Naše vozidlá</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-blue-800 mb-6">Obľúbené destinácie</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-            {buses.map(bus => (
-              <BusCard 
-                key={bus.id}
-                name={bus.name}
-                description={bus.description}
-                imageSrc={bus.imageSrc}
+            {destinations.map(destination => (
+              <TripCard 
+                key={destination.id}
+                name={destination.name}
+                description={destination.description}
+                imageSrc={destination.imageSrc}
               />
             ))}
           </div>
@@ -119,7 +119,7 @@ const RiabusHome = () => {
         <section>
           <div className="text-center">
             <Link 
-              to="/riabus/sluzby" 
+              to="/exkurzie/sluzby" 
               className="inline-block bg-blue-600 text-white px-8 py-4 rounded-lg font-medium hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg text-lg"
             >
               Zobraziť naše služby
@@ -127,58 +127,57 @@ const RiabusHome = () => {
           </div>
         </section>
       </div>
-    </RiabusLayout>
+    </ExkurzieLayout>
   );
 };
 
-const RiabusServices = () => {
-  // Define the bus information with features
-  const buses = [
+const ExkurzieServices = () => {
+  // Define popular destinations with features
+  const destinations = [
     {
-      id: 'iliade',
-      name: 'Renault ILIADE',
-      description: '49-miestny klimatizovaný autobus',
-      imageSrc: '/images/renault-iliade.webp',
+      id: 'krakow',
+      name: 'Krakov',
+      description: 'Historické centrum Poľska',
+      imageSrc: '/images/krakow.webp',
       features: [
-        'Klimatizácia',
-        'Pohodlné sedadlá s nastaviteľným operadlom',
-        'Audio-video systém s LCD obrazovkami',
-        'Veľký batožinový priestor',
-        'WiFi pripojenie',
-        'USB nabíjačky pri každom sedadle'
+        'Prehliadka Wawelského hradu',
+        'Návšteva židovskej štvrte Kazimierz',
+        'Fakultatívny výlet do Oswienčimu',
+        'Prehliadka námestia Rynek Główny',
+        'Mariánsky kostol',
+        'Fakultatívny výlet do Wieliczky'
       ]
     },
     {
-      id: 'master',
-      name: 'Renault MASTER',
-      description: '15-miestny klimatizovaný minibus',
-      imageSrc: '/images/renault-master.webp',
+      id: 'budapest',
+      name: 'Budapešť',
+      description: 'Perla na Dunaji',
+      imageSrc: '/images/budapest.webp',
       features: [
-        'Klimatizácia',
-        'Ideálny pre menšie skupiny',
-        'Pohodlné sedadlá',
-        'Dostatočný batožinový priestor',
-        'Flexibilné usporiadanie interiéru',
-        'Ekonomická prevádzka'
+        'Prehliadka Budínskeho hradu',
+        'Rybárska bašta s výhľadom na mesto',
+        'Návšteva parlamentu',
+        'Bazilika sv. Štefana',
+        'Plavba po Dunaji',
+        'Námestie hrdinov'
       ]
     }
   ];
   
   // Define our services
   const services = [
-    'Vnútroštátnu a medzinárodnú dopravu',
-    '49 miestny autobus - Renault ILIADE',
-    '15 miestny mini-bus - Renault MASTER',
     'Organizovanie domácich exkurzií',
     'Organizovanie zahraničných exkurzií',
-    'Sprievodcovskú činnosť',
-    'Dopravu pre školské výlety a exkurzie',
-    'Dopravu pre firemné akcie a športové podujatia',
-    'Individuálne plánovanie trás podľa požiadaviek klienta'
+    'Profesionálne sprievodcovské služby',
+    'Exkurzie pre školské skupiny',
+    'Exkurzie pre firemné akcie a kolektívy',
+    'Tematické poznávacie zájazdy',
+    'Individuálne plánovanie trás podľa požiadaviek klienta',
+    'Sprievodcu hovoriaceho po slovensky aj po anglicky'
   ];
 
   return (
-    <RiabusLayout>
+    <ExkurzieLayout>
       <div className="max-w-4xl mx-auto">
         <section className="mb-12">
           <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-6">Naše služby</h1>
@@ -200,16 +199,16 @@ const RiabusServices = () => {
         </section>
         
         <section className="mb-12">
-          <h2 className="text-2xl md:text-3xl font-bold text-blue-800 mb-6">Naše vozidlá</h2>
+          <h2 className="text-2xl md:text-3xl font-bold text-blue-800 mb-6">Obľúbené destinácie</h2>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {buses.map(bus => (
-              <BusCard 
-                key={bus.id}
-                name={bus.name}
-                description={bus.description}
-                features={bus.features}
-                imageSrc={bus.imageSrc}
+            {destinations.map(destination => (
+              <TripCard 
+                key={destination.id}
+                name={destination.name}
+                description={destination.description}
+                features={destination.features}
+                imageSrc={destination.imageSrc}
               />
             ))}
           </div>
@@ -230,13 +229,13 @@ const RiabusServices = () => {
             
             <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
               <h3 className="font-semibold text-blue-800 mb-2">Zahraničné exkurzie</h3>
-              <p>Navštívte európske metropoly, zábavné parky, múzeá a ďalšie atrakcie v zahraničí.</p>
+              <p>Navštívte európske metropoly, kultúrne pamiatky, múzeá a ďalšie atrakcie v zahraničí.</p>
             </div>
           </div>
           
           <div className="text-center mt-6">
             <Link 
-              to="/riabus/kontakt" 
+              to="/exkurzie/kontakt" 
               className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
             >
               Kontaktujte nás pre cenovú ponuku
@@ -244,30 +243,24 @@ const RiabusServices = () => {
           </div>
         </section>
       </div>
-    </RiabusLayout>
+    </ExkurzieLayout>
   );
 };
 
-const RiabusContact = () => {
+const ExkurzieContact = () => {
   // Contact people information
   const contactPeople = [
     {
       name: "PaedDr. Jana Šimková",
       title: "Sprievodcovské služby a plánovanie exkurzií",
       phone: "0908 191 439",
-      email: "sikmova@riabus.sk" // This would be displayed as an image
-    },
-    {
-      name: "Dušan Noga",
-      title: "Autobusová preprava RIABUS",
-      phone: "0905 236 503",
-      email: "noga@riabus.sk", // This would be displayed as an image
+      email: "sikmova@exkurzie.sk", // This would be displayed as an image
       address: "Pod papierňou 36\n085 01 Bardejov"
     }
   ];
 
   return (
-    <RiabusLayout>
+    <ExkurzieLayout>
       <div className="max-w-4xl mx-auto">
         <section>
           <h1 className="text-3xl md:text-4xl font-bold text-blue-800 mb-6">Kontaktujte nás</h1>
@@ -283,86 +276,7 @@ const RiabusContact = () => {
           </div>
         </section>
       </div>
-    </RiabusLayout>
-  );
-};
-
-// Sample Cimo Product Listing Component
-const CimoProductListing = ({ category, title, products }) => {
-  return (
-    <CimoLayout>
-      <div className="max-w-6xl mx-auto">
-        <div className="flex items-center mb-6">
-          <Link to="/cimo" className="text-emerald-600 hover:text-emerald-800">
-            Domov
-          </Link>
-          <span className="mx-2">/</span>
-          <span className="text-gray-600">{category}</span>
-        </div>
-        
-        <h1 className="text-3xl md:text-4xl font-bold text-emerald-800 mb-6">{title}</h1>
-        
-        <div className="bg-white rounded-lg shadow-md overflow-hidden mb-8">
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    ID
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Názov
-                  </th>
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Rozmery
-                  </th>
-                  {category === "Cenovky" && (
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Balenie
-                    </th>
-                  )}
-                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Ukážka
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {products.map((product, index) => (
-                  <tr key={index}>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                      {product.id}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {product.name}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {product.dimensions}
-                    </td>
-                    {category === "Cenovky" && (
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {product.packaging}
-                      </td>
-                    )}
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center">
-                          <img src="/api/placeholder/64/64" alt={`${product.name} predná strana`} className="max-h-full" />
-                        </div>
-                        {product.hasBackside && (
-                          <div className="h-16 w-16 bg-gray-100 rounded flex items-center justify-center">
-                            <img src="/api/placeholder/64/64" alt={`${product.name} zadná strana`} className="max-h-full" />
-                          </div>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-    </CimoLayout>
+    </ExkurzieLayout>
   );
 };
 
@@ -392,10 +306,10 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         
-        {/* Riabus Routes */}
-        <Route path="/riabus" element={<RiabusHome />} />
-        <Route path="/riabus/sluzby" element={<RiabusServices />} />
-        <Route path="/riabus/kontakt" element={<RiabusContact />} />
+        {/* Exkurzie Routes */}
+        <Route path="/exkurzie" element={<ExkurzieHome />} />
+        <Route path="/exkurzie/sluzby" element={<ExkurzieServices />} />
+        <Route path="/exkurzie/kontakt" element={<ExkurzieContact />} />
         
         {/* Cimo Routes */}
         <Route path="/cimo" element={<CimoHome />} />
