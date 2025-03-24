@@ -164,17 +164,17 @@ const productData = {
 
     // stitky
     "stitky": [
-      { id: "ZositoveStitkyVtakyEuropy", name: "Zošitové štítky - vtáky Európy (15 druhov)", dimensions: "4 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyModre", name: "Zošitové štítky - modré", dimensions: "12 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyMotyle", name: "Zošitové štítky - motýle", dimensions: "12 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyRyby", name: "Zošitové štítky - ryby", dimensions: "12 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyVtaky", name: "Zošitové štítky - vtáky", dimensions: "12 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyPsy", name: "Zošitové štítky - psy", dimensions: "12 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkySafari", name: "Zošitové štítky - safari", dimensions: "12 ks 77 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyPsy1", name: "Zošitové štítky - psy (1)", dimensions: "4 ks 81 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyPsy2", name: "Zošitové štítky - psy (2)", dimensions: "4 ks 81 mm x 46 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyPsy3", name: "Zošitové štítky - psy (3)", dimensions: "10 ks 46 mm x 31 mm", category: "Zošitové štítky", hasBackside: false},
-      { id: "ZositoveStitkyVianocne", name: "Vianočné štítky", dimensions: "8 ks 75 mm x 38 mm", category: "Zošitové štítky", hasBackside: false} 
+      { id: "ZositoveStitkyVtakyEuropy", name: "Zošitové štítky - vtáky Európy (15 druhov)", dimensions: "4 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyModre", name: "Zošitové štítky - modré", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyMotyle", name: "Zošitové štítky - motýle", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyRyby", name: "Zošitové štítky - ryby", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyVtaky", name: "Zošitové štítky - vtáky", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyPsy", name: "Zošitové štítky - psy", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkySafari", name: "Zošitové štítky - safari", dimensions: "12 ks 77 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyPsy1", name: "Zošitové štítky - psy (1)", dimensions: "4 ks 81 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyPsy2", name: "Zošitové štítky - psy (2)", dimensions: "4 ks 81 mm x 46 mm", hasBackside: false},
+      { id: "ZositoveStitkyPsy3", name: "Zošitové štítky - psy (3)", dimensions: "10 ks 46 mm x 31 mm", hasBackside: false},
+      { id: "ZositoveStitkyVianocne", name: "Vianočné štítky", dimensions: "8 ks 75 mm x 38 mm", hasBackside: false} 
     ],    
 
     // cenovky
@@ -263,6 +263,12 @@ const ProductImage = ({ src, alt, size = 'md', productId, type, category }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [imageError, setImageError] = useState(false);
   
+  // Add this useEffect to reset image error state when navigating
+  useEffect(() => {
+    // Reset error state when any of these props change
+    setImageError(false);
+  }, [productId, category, type]);
+  
   // Determine image size based on prop
   const sizeClasses = {
     sm: "h-16 w-16",
@@ -273,43 +279,40 @@ const ProductImage = ({ src, alt, size = 'md', productId, type, category }) => {
   const containerClass = sizeClasses[size] || sizeClasses.md;
   
   // Generate actual image path based on product info
-const getImagePath = () => {
-  // If a direct src is provided, use it
-  if (src && !src.includes('placeholder')) {
-    return src;
-  }
-  
-  // Otherwise, construct path from product info
-  let folder = '';
-  
-  // Map categories to folders
-  if (category === 'karty') folder = 'subory';
-  else if (category === 'karticky-velke') folder = 'karticky-velke';
-  else if (category === 'karticky-male') folder = 'karticky-male';
-  else if (category === 'obaly') folder = 'obaly';
-  else if (category === 'rozvrhy') folder = 'rozvrhy';
-  else if (category === 'zalozky') folder = 'zalozky';
-  else if (category === 'pozvanky') folder = 'pozvanky';
-  else if (category === 'pexesa') folder = 'pexesa';
-  else if (category === 'stitky') folder = 'stitky';
-  else if (category === 'cenovky') folder = 'cenovky';
-  else if (category === 'nalepky') folder = 'nalepky';
-  else folder = category || 'subory';
-  
-  // Format product ID for filename (handle special cases)
-  // Example: "Sj - 1" should become "sj-1" (not "sj---1")
-  const formattedId = productId.toLowerCase()
-    .replace(/\s*-\s*/g, '-') // Replace " - " with a single "-"
-    .replace(/\s+/g, '-')     // Replace other spaces with "-"
-    .replace(/\//g, '-')      // Replace "/" with "-"
-    .replace(/\./g, '')       // Remove periods
-    .replace(/[()]/g, '');    // Remove parentheses
-  
-  // Debug to console
-  //console.log(`Category: ${category}, Folder: ${folder}, ID: ${productId}, Formatted: ${formattedId}`);
-  
-  return `/images/products/${folder}/cimo-${folder}-${formattedId}-${type}.webp`;
-};
+  const getImagePath = () => {
+    // If a direct src is provided, use it
+    if (src && !src.includes('placeholder')) {
+      return src;
+    }
+    
+    // Otherwise, construct path from product info
+    let folder = '';
+    
+    // Map categories to folders
+    if (category === 'karty') folder = 'subory';
+    else if (category === 'karticky-velke') folder = 'karticky-velke';
+    else if (category === 'karticky-male') folder = 'karticky-male';
+    else if (category === 'obaly') folder = 'obaly';
+    else if (category === 'rozvrhy') folder = 'rozvrhy';
+    else if (category === 'zalozky') folder = 'zalozky';
+    else if (category === 'pozvanky') folder = 'pozvanky';
+    else if (category === 'pexesa') folder = 'pexesa';
+    else if (category === 'stitky') folder = 'stitky';
+    else if (category === 'cenovky') folder = 'cenovky';
+    else if (category === 'nalepky') folder = 'nalepky';
+    else folder = category || 'subory';
+    
+    // Format product ID for filename (handle special cases)
+    // Example: "Sj - 1" should become "sj-1" (not "sj---1")
+    const formattedId = productId.toLowerCase()
+      .replace(/\s*-\s*/g, '-') // Replace " - " with a single "-"
+      .replace(/\s+/g, '-')     // Replace other spaces with "-"
+      .replace(/\//g, '-')      // Replace "/" with "-"
+      .replace(/\./g, '')       // Remove periods
+      .replace(/[()]/g, '');    // Remove parentheses
+    
+    return `/images/products/${folder}/cimo-${folder}-${formattedId}-${type}.webp`;
+  };
   
   const imagePath = getImagePath();
   const placeholderSrc = `/api/placeholder/${size === 'lg' ? '200/200' : '128/128'}`;
@@ -470,6 +473,9 @@ const CimoProductCategory = () => {
       // Get unique subcategories
       const subCats = [...new Set(productData[category].map(p => p.category))].filter(Boolean);
       setSubcategories(subCats);
+      
+      // Reset selectedSubcategory when category changes
+      setSelectedSubcategory('all');
     }
   }, [category]);
   

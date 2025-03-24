@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ImageModal from './ImageModal';
 
 const ProductImage = ({ src, alt, size = 'md', productId, type, category }) => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [imageError, setImageError] = useState(false);
+  
+  // Reset image error state when component props change
+  useEffect(() => {
+    setImageError(false);
+  }, [productId, category, type]);
   
   // Determine image size based on prop
   const sizeClasses = {
@@ -41,20 +47,27 @@ const ProductImage = ({ src, alt, size = 'md', productId, type, category }) => {
         className={`${containerClass} bg-gray-100 rounded flex items-center justify-center overflow-hidden`}
         onClick={() => setModalOpen(true)}
       >
-        <img
-          src={imagePath}
-          alt={alt}
-          className="max-h-full max-w-full product-image"
-          onError={(e) => {
-            // Fallback to placeholder if image fails to load
-            e.target.src = `/api/placeholder/128/128`;
-          }}
-        />
+        {imageError ? (
+          <div className="flex items-center justify-center w-full h-full text-gray-400">
+            <span className="text-sm text-center">No image</span>
+          </div>
+        ) : (
+          <img
+            src={imagePath}
+            alt={alt}
+            className="max-h-full max-w-full product-image"
+            onError={(e) => {
+              // Fallback to placeholder if image fails to load
+              e.target.src = `/api/placeholder/128/128`;
+              setImageError(true);
+            }}
+          />
+        )}
       </div>
       
       <ImageModal
         isOpen={modalOpen}
-        imageUrl={imagePath}
+        imageUrl={imageError ? `/api/placeholder/128/128` : imagePath}
         alt={alt}
         onClose={() => setModalOpen(false)}
       />
