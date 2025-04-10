@@ -1,0 +1,8 @@
+# robots.txt for riabus-cimo.sk
+# Allow all web crawlers to access all content
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://riabus-cimo.sk/sitemap.xml
