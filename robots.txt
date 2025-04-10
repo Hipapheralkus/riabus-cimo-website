@@ -1,8 +1,8 @@
-# robots.txt for riabus-cimo.sk
+# robots.txt for taosi.sk
 # Allow all web crawlers to access all content
 
 User-agent: *
 Allow: /
 
 # Sitemap location
-Sitemap: https://riabus-cimo.sk/sitemap.xml
+Sitemap: https://taosi.sk/sitemap.xml

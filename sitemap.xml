@@ -2,7 +2,7 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Main pages -->
   <url>
-    <loc>https://riabus-cimo.sk/</loc>
+    <loc>https://taosi.sk/</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
@@ -10,19 +10,19 @@
   
   <!-- Exkurzie section -->
   <url>
-    <loc>https://riabus-cimo.sk/exkurzie</loc>
+    <loc>https://taosi.sk/exkurzie</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/exkurzie/sluzby</loc>
+    <loc>https://taosi.sk/exkurzie/sluzby</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/exkurzie/kontakt</loc>
+    <loc>https://taosi.sk/exkurzie/kontakt</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -30,13 +30,13 @@
   
   <!-- Cimo section -->
   <url>
-    <loc>https://riabus-cimo.sk/cimo</loc>
+    <loc>https://taosi.sk/cimo</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/kontakt</loc>
+    <loc>https://taosi.sk/cimo/kontakt</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -44,67 +44,67 @@
   
   <!-- Cimo product categories -->
   <url>
-    <loc>https://riabus-cimo.sk/cimo/karty</loc>
+    <loc>https://taosi.sk/cimo/karty</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/obaly</loc>
+    <loc>https://taosi.sk/cimo/obaly</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/karticky-velke</loc>
+    <loc>https://taosi.sk/cimo/karticky-velke</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/karticky-male</loc>
+    <loc>https://taosi.sk/cimo/karticky-male</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/rozvrhy</loc>
+    <loc>https://taosi.sk/cimo/rozvrhy</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/zalozky</loc>
+    <loc>https://taosi.sk/cimo/zalozky</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/pozvanky</loc>
+    <loc>https://taosi.sk/cimo/pozvanky</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/pexesa</loc>
+    <loc>https://taosi.sk/cimo/pexesa</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/stitky</loc>
+    <loc>https://taosi.sk/cimo/stitky</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/cenovky</loc>
+    <loc>https://taosi.sk/cimo/cenovky</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://riabus-cimo.sk/cimo/nalepky</loc>
+    <loc>https://taosi.sk/cimo/nalepky</loc>
     <lastmod>2025-04-11</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
