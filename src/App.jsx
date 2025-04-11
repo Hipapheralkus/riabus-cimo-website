@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
 import './App.css';
+import { Analytics } from "@vercel/analytics/react"
 
 // Import shared components
 import { OptimizedImage, EmailImage } from './utils/ImageComponents';
@@ -303,6 +304,7 @@ const NotFound = () => {
 function App() {
   return (
     <Router>
+      <Analytics />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         

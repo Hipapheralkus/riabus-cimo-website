@@ -24,7 +24,7 @@
     "concurrently": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
-    "terser": "^5.39.0",
+    "terser": "latest",
     "vite": "latest"
   }
 }
