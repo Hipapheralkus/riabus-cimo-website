@@ -255,8 +255,7 @@ const ExkurzieContact = () => {
       name: "PaedDr. Jana Šimková",
       title: "Sprievodcovské služby a plánovanie exkurzií",
       phone: "0908 191 439",
-      email: "sikmova@exkurzie.sk", // This would be displayed as an image
-      address: "Pod papierňou 36\n085 01 Bardejov"
+      email: "sikmova@exkurzie.sk"
     }
   ];
 
