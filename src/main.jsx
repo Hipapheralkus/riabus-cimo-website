@@ -1,8 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import App from './App';
-import './tailwind.css'; // Import the generated Tailwind CSS
-import './App.css';      // Import custom CSS
+// Import index.css first for Tailwind directives
+import './index.css';
+// Import App.css for custom overrides
+import './App.css';
 import { Analytics } from "@vercel/analytics/react"
 
 // For accessibility and better user experience
@@ -16,8 +18,14 @@ const handleFirstTab = (e) => {
 window.addEventListener('keydown', handleFirstTab);
 
 // Render the React application
-ReactDOM.createRoot(document.getElementById('root')).render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+const rootElement = document.getElementById('root');
+if (rootElement) {
+  ReactDOM.createRoot(rootElement).render(
+    <React.StrictMode>
+      <App />
+      <Analytics />
+    </React.StrictMode>
+  );
+} else {
+  console.error("Failed to find the root element");
+}

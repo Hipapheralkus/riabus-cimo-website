@@ -6,8 +6,6 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "tailwind": "tailwindcss -i ./src/index.css -o ./src/tailwind.css --watch",
-    "dev:tailwind": "concurrently \"npm run tailwind\" \"npm run dev\"",
     "prepare": "npm install terser --save-dev"
   },
   "dependencies": {
@@ -17,6 +15,7 @@
     "react-router-dom": "latest"
   },
   "devDependencies": {
+    "@tailwindcss/postcss": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "@vitejs/plugin-react": "latest",
@@ -24,7 +23,7 @@
     "concurrently": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
-    "terser": "latest",
+    "terser": "^5.44.1",
     "vite": "latest"
   }
 }
