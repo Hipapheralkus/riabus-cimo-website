@@ -12,7 +12,7 @@
     "@vercel/analytics": "latest",
     "react": "latest",
     "react-dom": "latest",
-    "react-router-dom": "latest"
+    "react-router-dom": "^7.13.2"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
@@ -23,7 +23,7 @@
     "concurrently": "latest",
     "postcss": "latest",
     "tailwindcss": "latest",
-    "terser": "^5.44.1",
+    "terser": "^5.46.1",
     "vite": "latest"
   }
 }
