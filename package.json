@@ -9,21 +9,21 @@
     "prepare": "npm install terser --save-dev"
   },
   "dependencies": {
-    "@vercel/analytics": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "react-router-dom": "^7.13.2"
+    "@vercel/analytics": "^2.0.1",
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7",
+    "react-router-dom": "^7.18.1"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "latest",
-    "@types/react": "latest",
-    "@types/react-dom": "latest",
-    "@vitejs/plugin-react": "latest",
-    "autoprefixer": "latest",
-    "concurrently": "latest",
-    "postcss": "latest",
-    "tailwindcss": "latest",
-    "terser": "^5.46.1",
-    "vite": "latest"
+    "@tailwindcss/postcss": "^4.3.2",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.3",
+    "autoprefixer": "^10.5.2",
+    "concurrently": "^10.0.3",
+    "postcss": "^8.5.16",
+    "tailwindcss": "^4.3.2",
+    "terser": "^5.48.0",
+    "vite": "^8.1.0"
   }
 }

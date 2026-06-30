@@ -26,8 +26,12 @@ export default defineConfig({
     },
     rollupOptions: {
       output: {
-        manualChunks: {
-          vendor: ['react', 'react-dom', 'react-router-dom'],
+        // Vite 8 uses Rolldown, which requires the function form of manualChunks.
+        // Group the React ecosystem into a stable "vendor" chunk for better caching.
+        manualChunks(id) {
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) {
+            return 'vendor';
+          }
         },
       },
     },
