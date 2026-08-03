@@ -1,6 +1,10 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+// This file is ESM ("type": "module"), so __dirname is not defined.
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -29,7 +33,7 @@ export default defineConfig({
         // Vite 8 uses Rolldown, which requires the function form of manualChunks.
         // Group the React ecosystem into a stable "vendor" chunk for better caching.
         manualChunks(id) {
-          if (/[\\/]node_modules[\\/](react|react-dom|react-router|react-router-dom|scheduler)[\\/]/.test(id)) {
+          if (/[\\/]node_modules[\\/](react|react-dom|react-router|scheduler)[\\/]/.test(id)) {
             return 'vendor';
           }
         },
@@ -47,6 +51,6 @@ export default defineConfig({
     open: true,
   },
   optimizeDeps: {
-    include: ['react', 'react-dom', 'react-router-dom'],
+    include: ['react', 'react-dom', 'react-router'],
   },
 });

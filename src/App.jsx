@@ -1,6 +1,6 @@
 // First, make sure your import statements at the top of App.jsx include CimoHome:
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, useParams } from 'react-router';
 import './App.css';
 import { Analytics } from "@vercel/analytics/react"
 
